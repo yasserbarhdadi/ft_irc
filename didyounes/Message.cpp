@@ -32,7 +32,6 @@ std::vector<std::string> Message::get_av()
 	return av;
 }
 
-
 void Message::set_cmd(std::string new_cmd)
 {
 	cmd = new_cmd;

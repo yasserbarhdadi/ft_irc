@@ -17,10 +17,6 @@ Client::Client(int client_fd): fd(client_fd) , is_registered(false)
 
 }
 
-Client::~Client()
-{
-}
-
 int Client::get_fd()
 {
 	return fd;
@@ -44,4 +40,8 @@ void Client::set_registered(bool status)
 void Client::append_to_buffer(std::string text)
 {
 	buffer += text;
+}
+
+Client::~Client()
+{
 }

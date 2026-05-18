@@ -32,5 +32,4 @@ class Client
 		void	append_to_buffer(std::string text);
 };
 
-
 #endif
