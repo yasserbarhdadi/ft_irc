@@ -1,8 +1,8 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 NAME = ircserv
-SRC = main.cpp
-HEADER = main.hpp
+SRC = main.cpp Client.cpp Message.cpp
+HEADER = main.hpp Client.hpp Message.hpp
 OBJ = $(SRC:%.cpp=%.o)
 
 all: $(NAME)

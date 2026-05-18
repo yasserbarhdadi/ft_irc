@@ -1,23 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.hpp                                           :+:      :+:    :+:   */
+/*   Message.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yabarhda <yabarhda@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/18 15:52:15 by yabarhda          #+#    #+#             */
-/*   Updated: 2026/05/18 21:09:53 by yabarhda         ###   ########.fr       */
+/*   Created: 2026/05/18 16:25:37 by yel-joul          #+#    #+#             */
+/*   Updated: 2026/05/18 21:23:56 by yabarhda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef MESSAGE_HPP
+#define MESSAGE_HPP
 
-#include <iostream>
+#include <string>
 #include <vector>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <fcntl.h>
-#include <poll.h>
-#include <unistd.h>
-#include <cstdlib>
-#include <cstring>
+
+class Message
+{
+	private:
+		std::string cmd;
+		std::vector<std::string> av;
+
+	public:
+		Message();
+		~Message();
+		std::string get_cmd() const;
+		std::vector<std::string> get_av() const;
+		void set_cmd(const std::string &new_cmd);
+		void add_av(const std::string &param);
+		void clear();
+};
+
+#endif

@@ -1,23 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.hpp                                           :+:      :+:    :+:   */
+/*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yabarhda <yabarhda@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/18 15:52:15 by yabarhda          #+#    #+#             */
-/*   Updated: 2026/05/18 21:09:53 by yabarhda         ###   ########.fr       */
+/*   Created: 2026/05/18 16:25:43 by yel-joul          #+#    #+#             */
+/*   Updated: 2026/05/18 21:23:56 by yabarhda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#include "Message.hpp"
 
-#include <iostream>
-#include <vector>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <fcntl.h>
-#include <poll.h>
-#include <unistd.h>
-#include <cstdlib>
-#include <cstring>
+Message::Message()
+{
+}
+
+Message::~Message()
+{
+}
+
+std::string Message::get_cmd() const
+{
+	return cmd;
+}
+
+std::vector<std::string> Message::get_av() const
+{
+	return av;
+}
+
+void Message::set_cmd(const std::string &new_cmd)
+{
+	cmd = new_cmd;
+}
+
+void Message::add_av(const std::string &param)
+{
+	av.push_back(param);
+}
+
+void Message::clear()
+{
+	cmd.clear();
+	av.clear();
+}
