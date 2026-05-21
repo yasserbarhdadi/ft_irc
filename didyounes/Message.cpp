@@ -32,12 +32,12 @@ std::vector<std::string> Message::get_av()
 	return av;
 }
 
-void Message::set_cmd(std::string new_cmd)
+void Message::set_cmd(const std::string &new_cmd)
 {
 	cmd = new_cmd;
 }
 
-void Message::add_av(std::string param)
+void Message::add_av(const std::string &param)
 {
 	av.push_back(param);
 }
