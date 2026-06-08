@@ -15,14 +15,6 @@
 #include <sstream>
 #include <string>
 
-
-
-
-
-
-
-
-
 Message parse_message(const std::string &raw_text)
 {
 	Message msg;
