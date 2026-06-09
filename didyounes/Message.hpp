@@ -25,8 +25,8 @@ class Message
 	public:
 		Message();
 		~Message();
-		std::string get_cmd();
-		std::vector<std::string> get_av();
+		std::string get_cmd() const;
+		std::vector<std::string> get_av() const;
 		void set_cmd(const std::string &new_cmd);
 		void add_av(const std::string &param);
 };

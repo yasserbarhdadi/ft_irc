@@ -10,10 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cmd_handler"
+#include "cmd_handler.hpp"
 
 void handle_pass(Client &client, const Message &msg)
 {
+	(void)client;
 	std::vector<std::string> args;
 	args = msg.get_av();
 	if (args.size() == 0)

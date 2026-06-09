@@ -22,12 +22,12 @@ Message::~Message()
 
 }
 
-std::string Message::get_cmd()
+std::string Message::get_cmd() const
 {
 	return cmd;
 }
 
-std::vector<std::string> Message::get_av()
+std::vector<std::string> Message::get_av() const
 {
 	return av;
 }
