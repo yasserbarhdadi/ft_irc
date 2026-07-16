@@ -13,12 +13,16 @@
 #ifndef SERVER_HPP 
 #define SERVER_HPP
 
+#include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <string>
 #include <iostream>
+#include <poll.h>
+#include <vector>
+#include <cstring>
 
 
 class Server
@@ -26,10 +30,13 @@ class Server
     private:
             int _server_fd;
             int _port;
+            std::vector<struct pollfd>  _fds;
             std::string _password;
     public:
             Server(int f_port, std::string f_password);
-            void    init();
+            void        init();
+            void        run();
+            void        acceptNewClient();
             ~Server();
 };
 #endif
