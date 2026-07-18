@@ -1,5 +1,5 @@
 #pragma once
 
-class Client {
+class Server {
 
 };
