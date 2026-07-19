@@ -20,4 +20,4 @@ public:
     std::string get_perfix();
     std::vector<std::string> get_parameters();
 
-}
+};

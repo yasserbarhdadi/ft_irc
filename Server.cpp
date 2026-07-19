@@ -49,8 +49,9 @@ void Server::run()
         std::cerr << "Error listening on socket" << std::endl;
         return;
     }
-    while (true)
-    {
-        // client connection handling code would go here
-    }
+    std::cout << "Server Is Ready!" << std::endl;
+    // while (true)
+    // {
+    //     // client connection handling code would go here
+    // }
 }
