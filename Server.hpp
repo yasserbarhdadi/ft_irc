@@ -1,5 +1,5 @@
 #pragma once
-#include "irc.hpp"
+#include "main.hpp"
 
 class Server {
     private:
