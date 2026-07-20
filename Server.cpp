@@ -31,6 +31,37 @@ Server& Server::operator=(const Server &obj)
     return *this;
 }
 
+void Server::add_new_client()
+{
+    struct sockaddr_in client_addr;
+    socklen_t client_len = sizeof(client_addr);
+    
+    int client_fd = accept(srv_socket, (struct sockaddr*)&client_addr, &client_len);
+    
+    if (client_fd == -1) {
+        std::cerr << "Error: could not accept user." << std::endl;
+        return;
+    }
+    
+    if (fcntl(client_fd, F_SETFL, O_NONBLOCK) == -1) {
+        std::cerr << "Error: fcntl failed." << std::endl;
+        close(client_fd);
+        return;
+    }
+
+    std::string ip_address = inet_ntoa(client_addr.sin_addr);
+    std::cout << "New client connected! Socket ID: " << client_fd << " IP: " << ip_address << std::endl;
+    
+    struct pollfd new_client;
+    new_client.fd = client_fd;
+    new_client.events = POLLIN;
+    new_client.revents = 0;
+    _pollfds.push_back(new_client);
+
+    Client new_user(client_fd, ip_address); 
+    client[client_fd] = new_user;
+}
+
 void Server::run()
 {
     struct sockaddr_in serv;
@@ -80,27 +111,12 @@ void Server::run()
                 if (_pollfds[i].revents & POLLIN)
                 {
                     if (_pollfds[i].fd == srv_socket) {
-                        // We have a new connection!
-                        // TODO: Call accept() here
-                        // TODO: Create a new pollfd for them and push_back to _pollfds
+                        add_new_client();
                     }
                     else {
                         // We have a message from someone already inside!
-                        int bytes_received = recv(_pollfds[i].fd, buffer, sizeof(buffer) - 1, 0);
-                        if (bytes_received <= 0)
-                        {
-                            std::cout << "Client disconnected: " << _pollfds[i].fd << std::endl;
-                            close(_pollfds[i].fd);
-                            _pollfds.erase(_pollfds.begin() + i);
-                            i--;
-                        }
-                        else
-                        {
-                            buffer[bytes_received] = '\0';
-
-                                
-                            std::cout << "Received from client " << _pollfds[i].fd << ": " << buffer << std::endl;
-                        }
+                        // TODO: Call recv() using _pollfds[i].fd
+                        // TODO: Handle the text they sent
                     }
                 }
             }

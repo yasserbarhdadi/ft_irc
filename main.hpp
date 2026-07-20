@@ -13,7 +13,11 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <poll.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include "Client.hpp"
+#include "Message.hpp"
+#include "Channel.hpp"
 
 #endif
