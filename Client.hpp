@@ -4,7 +4,7 @@
 class Client
 {
     private:
-        int socket;
+        int fd;
         std::string ip_address;
         std::string nickname;
         std::string username;
@@ -12,6 +12,8 @@ class Client
         bool is_registered;
     public:
         Client();
+        Client(int fd);
+        Client(int fd, std::string ip_addr);
         ~Client();
         Client(const Client &);
         Client(int sock, std::string ip_address, std::string nickname, std::string username, std::string realname, bool is_registered);

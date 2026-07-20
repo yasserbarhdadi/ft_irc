@@ -17,4 +17,5 @@ class Server {
         Server &operator=(const Server &);
     
         void run();
+        void add_new_client();
 };
