@@ -1,8 +1,6 @@
 #include "Message.hpp"
 
-Message::Message()
+Message::Message(std::string &buf)
 {
-    Message::command = "";
-    Message::prefix = "";
-    Message::parameters.clear();
+    buffer = buf;
 }

@@ -62,10 +62,31 @@ void Server::add_new_client()
     client[client_fd] = new_user;
 }
 
+void Server::parse_client_message(size_t &index)
+{
+    char buffer[1024];
+    int bytes_received = recv(_pollfds[index].fd, buffer, sizeof(buffer) - 1, 0);
+
+    if (bytes_received <= 0)
+    {
+        std::cout << "Client disconnected: " << _pollfds[index].fd << std::endl;
+        close(_pollfds[index].fd);
+        _pollfds.erase(_pollfds.begin() + index);
+        index--;
+    }
+    else
+    {
+        buffer[bytes_received] = '\0';
+        std::string s(buffer);
+        Message msg(s);
+        // msg.parse();
+        std::cout << "Received from client " << _pollfds[index].fd << ": " << buffer;
+    }
+}
+
 void Server::run()
 {
     struct sockaddr_in serv;
-    char buffer[1024];
 
     std::cout << "Starting server...\n";
 
@@ -113,22 +134,8 @@ void Server::run()
                     if (_pollfds[i].fd == srv_socket) {
                         add_new_client();
                     }
-                    else
-                    {
-                        // We have a message from someone already inside!
-                        int bytes_received = recv(_pollfds[i].fd, buffer, sizeof(buffer) - 1, 0);
-                        if (bytes_received <= 0)
-                        {
-                            std::cout << "Client disconnected: " << _pollfds[i].fd << std::endl;
-                            close(_pollfds[i].fd);
-                            _pollfds.erase(_pollfds.begin() + i);
-                            i--;
-                        }
-                        else
-                        {
-                            buffer[bytes_received] = '\0';
-                            std::cout << "Received from client " << _pollfds[i].fd << ": " << buffer << std::endl;
-                        }
+                    else {
+                        parse_client_message(i);
                     }
                 }
             }
