@@ -37,7 +37,7 @@ void Server::run()
 
     memset(&serv,0,sizeof(serv));
     serv.sin_family = AF_INET;
-    serv.sin_port = htons(8080);
+    serv.sin_port = htons(port);
     inet_pton(AF_INET,"127.0.0.0", &serv.sin_addr);
     if(bind(srv_socket, (struct sockaddr*)&serv, sizeof(serv)) < 0)
     {
