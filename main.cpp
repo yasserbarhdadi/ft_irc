@@ -1,7 +1,4 @@
 #include "Server.hpp"
-#include "Client.hpp"
-#include "Channel.hpp"
-#include "Message.hpp"
 
 int main(int ac, char **av)
 {

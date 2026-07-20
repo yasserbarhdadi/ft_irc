@@ -7,6 +7,8 @@ class Server {
         std::string password;
         int port;
         int srv_socket;
+        std::vector<struct pollfd> _pollfds;
+        std::map<int, Client> client;
     public:
         Server();
         ~Server();
