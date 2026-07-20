@@ -34,6 +34,7 @@ Server& Server::operator=(const Server &obj)
 void Server::run()
 {
     struct sockaddr_in serv;
+    char buffer[1024];
 
     std::cout << "Starting server...\n";
 
@@ -85,8 +86,21 @@ void Server::run()
                     }
                     else {
                         // We have a message from someone already inside!
-                        // TODO: Call recv() using _pollfds[i].fd
-                        // TODO: Handle the text they sent
+                        int bytes_received = recv(_pollfds[i].fd, buffer, sizeof(buffer) - 1, 0);
+                        if (bytes_received <= 0)
+                        {
+                            std::cout << "Client disconnected: " << _pollfds[i].fd << std::endl;
+                            close(_pollfds[i].fd);
+                            _pollfds.erase(_pollfds.begin() + i);
+                            i--;
+                        }
+                        else
+                        {
+                            buffer[bytes_received] = '\0';
+
+                                
+                            std::cout << "Received from client " << _pollfds[i].fd << ": " << buffer << std::endl;
+                        }
                     }
                 }
             }
