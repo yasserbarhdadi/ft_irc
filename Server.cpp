@@ -50,7 +50,7 @@ void Server::add_new_client()
     }
 
     std::string ip_address = inet_ntoa(client_addr.sin_addr);
-    std::cout << "Client connected Socket ID: " << client_fd << " IP: " << ip_address << std::endl;
+    std::cout << "Client. connected Socket ID: " << client_fd << " IP: " << ip_address << std::endl;
     
     struct pollfd new_client;
     new_client.fd = client_fd;
