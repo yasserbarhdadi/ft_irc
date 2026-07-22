@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <vector>
 #include <map>
+#include <algorithm>
 
 #include <sys/socket.h>
 #include <sys/types.h>

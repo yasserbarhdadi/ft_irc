@@ -18,4 +18,8 @@ class Client
         Client(const Client &);
         Client(int sock, std::string ip_address, std::string nickname, std::string username, std::string realname, bool is_registered);
         Client &operator=(const Client &obj);
+
+        //added functions for pass permission
+        bool	get_is_registered() const;
+        void	set_is_registered(bool value);
 };

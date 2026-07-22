@@ -19,4 +19,5 @@ class Server {
         void run();
         void add_new_client();
         void parse_client_message(size_t &index);
+        bool	authenticate_client(Client &client, const std::string &input_password);
 };

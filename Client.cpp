@@ -47,3 +47,15 @@ Client& Client::operator=(const Client &obj)
     }
     return *this;
 }
+
+//implemention of the added function
+
+bool Client::get_is_registered() const
+{
+	return (this->is_registered);
+}
+
+void Client::set_is_registered(bool value)
+{
+	this->is_registered = value;
+}
