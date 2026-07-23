@@ -31,6 +31,30 @@ Server& Server::operator=(const Server &obj)
     return *this;
 }
 
+/**
+ * dispatch_cmd()
+ * is command dispatcher, has a huge chain of hardcoded if/else
+ * later on it needs to get cleaned to something else other than if/else
+ * cannot use switch case on std::string on c++98
+ * this method has only one purpose, in which it routes commands...
+ * to their respective executers which I have yet to declare, no more no less.
+ */
+
+void Server::dispatch_cmd(int fd, Message &msg)
+{
+	std::string cmd = msg.getCmd();
+
+	if (cmd == "PASS") {
+
+	}
+	else if (cmd == "NICK") {
+
+	}
+	else if (cmd == "USER") {
+
+	}
+}
+
 /** 
  * add_new_client()
  * this method's sole purpose is to accept tcp connection and only that.
@@ -75,6 +99,7 @@ void Server::add_new_client()
 void Server::parse_client_message(size_t &index)
 {
     char buffer[1024];
+	Message msg;
     int bytes_received = recv(_pollfds[index].fd, buffer, sizeof(buffer) - 1, 0);
 	int fd = _pollfds[index].fd;
 
@@ -96,6 +121,8 @@ void Server::parse_client_message(size_t &index)
 	size_t pos = client[fd].get_recv_buf().find("\r\n");
 	while (pos != std::string::npos) {
 		std::string line = client[fd].get_recv_buf().substr(0, pos);
+		msg.parse(line);
+		dispatch_cmd(fd, msg);
 		// parse the command here
 		// line holds the entire command and its params
 		// after parsing, it needs to be executed immediately

@@ -8,10 +8,13 @@
 class Message
 {
     private: 
-        std::string buffer;
+        std::string cmd;
+		std::vector<std::string> params;
     public:
         Message() {};
-        Message(std::string &buf);
         ~Message() {};
-        // void parse_Message(std::string &message);
+
+		void parse(std::string &ln);
+		std::string getCmd() const;
+		std::vector<std::string> getParams() const;
 };
