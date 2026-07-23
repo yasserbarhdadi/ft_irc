@@ -100,16 +100,16 @@ void Server::parse_client_message(size_t &index)
 {
     char buffer[1024];
 	Message msg;
-    int bytes_received = recv(_pollfds[index].fd, buffer, sizeof(buffer) - 1, 0);
 	int fd = _pollfds[index].fd;
+    int bytes_received = recv(fd, buffer, sizeof(buffer) - 1, 0);
 
     if (bytes_received <= 0) {
-		// missing client cleanup
-		// need to remove the client from the client map
 		// remove the client from any channel they were in
 		// notify said channel that the client disconnected
-        std::cout << "Client disconnected: " << _pollfds[index].fd << std::endl;
-        close(_pollfds[index].fd);
+		// need to create a method that takes care of the below code.
+        std::cout << "Client " << fd << " disconnected." << std::endl;
+        close(fd);
+		client.erase(fd);
         _pollfds.erase(_pollfds.begin() + index);
         index--;
 		return;
