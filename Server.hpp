@@ -9,6 +9,10 @@ class Server {
         int srv_socket;
         std::vector<struct pollfd> _pollfds;
         std::map<int, Client> client;
+        void	send_reply(int fd, const std::string &reply);
+		void	cmd_pass(int fd, Message &msg);
+		void	cmd_nick(int fd, Message &msg);
+		void	cmd_user(int fd, Message &msg);
     public:
         Server();
         ~Server();

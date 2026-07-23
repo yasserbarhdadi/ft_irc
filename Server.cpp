@@ -32,6 +32,120 @@ Server& Server::operator=(const Server &obj)
 }
 
 /**
+ * send_reply()
+ * helper function to send raw irc numeric replies to clients.
+ * it automatically appends the \r\n that irc rfc demands.
+ * right now we directly call send(), but later on we might need...
+ * to push this into a client send buffer to handle non-blocking socket issues.
+ * also, the ":server" prefix is hardcoded and needs to be changed later to our actual server name.
+ */
+void Server::send_reply(int fd, const std::string &reply)
+{
+	std::string full_reply = reply + "\r\n";
+	send(fd, full_reply.c_str(), full_reply.length(), 0);
+}
+
+/**
+ * cmd_pass()
+ * handles the PASS command which must be sent before NICK or USER.
+ * simply checks if the password matches our server password and sets the boolean.
+ * note for later: right now if they give a wrong password we just send ERR 464...
+ * we might want to immediately close(fd) and drop the connection when authentication fails.
+ */
+void Server::cmd_pass(int fd, Message &msg)
+{
+	if (client[fd].get_is_registered())
+	{
+		send_reply(fd, ":server 462 * :You may not reregister");
+		return ;
+	}
+	if (msg.getParams().empty())
+	{
+		send_reply(fd, ":server 461 * PASS :Not enough parameters");
+		return ;
+	}
+	if (msg.getParams()[0] == this->password)
+	{
+		client[fd].set_is_pass(true);
+	}
+	else
+	{
+		send_reply(fd, ":server 464 * :Password incorrect");
+	}
+}
+/**
+ * cmd_nick()
+ * handles setting the nickname. first checks if PASS was already sent.
+ * loops through the whole client map to make sure the nickname isn't already taken.
+ * if they already set their USER too, it triggers try_register() and sends the welcome message.
+ * todo for later: we need to add character validation so users can't use special symbols...
+ * and handle nickname changes if the client is already registered.
+ */
+void Server::cmd_nick(int fd, Message &msg)
+{
+	if (!client[fd].get_is_pass())
+	{
+		send_reply(fd, ":server 451 * :You have not registered (Send PASS first)");
+		return ;
+	}
+	if (msg.getParams().empty())
+	{
+		send_reply(fd, ":server 431 * :No nickname given");
+		return ;
+	}
+
+	std::string new_nick = msg.getParams()[0];
+
+	for (std::map<int, Client>::iterator it = client.begin(); it != client.end(); ++it)
+	{
+		if (it->second.get_nickname() == new_nick && it->first != fd)
+		{
+			send_reply(fd, ":server 433 * " + new_nick + " :Nickname is already in use");
+			return ;
+		}
+	}
+	client[fd].set_nickname(new_nick);
+	client[fd].set_is_nick(true);
+	if (client[fd].try_register())
+	{
+		send_reply(fd, ":server 001 " + new_nick + " :Welcome to the Internet Relay Network " + new_nick);
+	}
+}
+
+
+/**
+ * cmd_user()
+ * handles the USER command to set username and realname (params 0 and 3).
+ * ignores hostname and servername since modern irc servers just use the ip anyway.
+ * if NICK was already set, this completes registration and sends the 001 welcome rpl.
+ * just make sure our Message::parse() correctly grabs the whole realname if it has spaces!
+ */
+void Server::cmd_user(int fd, Message &msg)
+{
+	if (!client[fd].get_is_pass())
+	{
+		send_reply(fd, ":server 451 * :You have not registered (Send PASS first)");
+		return ;
+	}
+	if (client[fd].get_is_registered())
+	{
+		send_reply(fd, ":server 462 * :You may not reregister");
+		return ;
+	}
+	if (msg.getParams().size() < 4)
+	{
+		send_reply(fd, ":server 461 * USER :Not enough parameters");
+		return ;
+	}
+	client[fd].set_username(msg.getParams()[0]);
+	client[fd].set_realname(msg.getParams()[3]);
+	client[fd].set_is_user(true);
+	if (client[fd].try_register())
+	{
+		send_reply(fd, ":server 001 " + client[fd].get_nickname() + " :Welcome to the Internet Relay Network " + client[fd].get_nickname());
+	}
+}
+/**
  * dispatch_cmd()
  * is command dispatcher, has a huge chain of hardcoded if/else
  * later on it needs to get cleaned to something else other than if/else
@@ -44,17 +158,27 @@ void Server::dispatch_cmd(int fd, Message &msg)
 {
 	std::string cmd = msg.getCmd();
 
-	if (cmd == "PASS") {
-
+	if (cmd == "PASS")
+	{
+		cmd_pass(fd, msg);
 	}
-	else if (cmd == "NICK") {
-
+	else if (cmd == "NICK")
+	{
+		cmd_nick(fd, msg);
 	}
-	else if (cmd == "USER") {
-
+	else if (cmd == "USER")
+	{
+		cmd_user(fd, msg);
+	}
+	else if (!client[fd].get_is_registered())
+	{
+		send_reply(fd, ":server 451 * :You have not registered");
+	}
+	else
+	{
+		// Future registered commands go here (e.g., JOIN, PRIVMSG, KICK, etc.)
 	}
 }
-
 /** 
  * add_new_client()
  * this method's sole purpose is to accept tcp connection and only that.
