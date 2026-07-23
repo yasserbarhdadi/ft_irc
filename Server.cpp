@@ -192,15 +192,3 @@ void Server::run()
         }
     }
 }
-
-//pass permision accept
-
-bool Server::authenticate_client(Client &client, const std::string &input_password)
-{
-	if (input_password != this->password)
-	{
-		return (false);
-	}
-	client.set_is_registered(true);
-	return (true);
-}

@@ -9,8 +9,11 @@ class Client
         std::string nickname;
         std::string username;
         std::string realname;
-        bool is_registered;
 		std::string recv_buffer;
+        bool is_registered;
+        bool is_pass;
+        bool is_nick;
+        bool is_user;
     public:
         Client();
         Client(int fd);

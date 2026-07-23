@@ -20,5 +20,4 @@ class Server {
         void add_new_client();
         void parse_client_message(size_t &index);
 		void dispatch_cmd(int fd, Message &msg);
-        bool	authenticate_client(Client &client, const std::string &input_password);
 };
