@@ -116,16 +116,12 @@ void Server::parse_client_message(size_t &index)
     }
 
 	buffer[bytes_received] = '\0';
-	// std::cout << "Received from client " << _pollfds[index].fd << ": " << buffer;
 	client[fd].push_back_buf(buffer);
 	size_t pos = client[fd].get_recv_buf().find("\r\n");
 	while (pos != std::string::npos) {
 		std::string line = client[fd].get_recv_buf().substr(0, pos);
 		msg.parse(line);
 		dispatch_cmd(fd, msg);
-		// parse the command here
-		// line holds the entire command and its params
-		// after parsing, it needs to be executed immediately
 		client[fd].get_recv_buf().erase(0, pos + 2);
 		pos = client[fd].get_recv_buf().find("\r\n");
 	}
