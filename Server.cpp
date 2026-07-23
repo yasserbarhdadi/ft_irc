@@ -31,6 +31,16 @@ Server& Server::operator=(const Server &obj)
     return *this;
 }
 
+/** 
+ * add_new_client()
+ * this method's sole purpose is to accept tcp connection and only that.
+ * if the user connects with the password through an irc client...
+ * the parse method in the Message class should be ready to accept...
+ * 3 consecutive commands, which are the PASS, NICK and USER.
+ * these 3 commands are received automatically by the server from the irc client.
+ * add_new_client() method is complete and doesn't need to altered in any way.
+*/
+
 void Server::add_new_client()
 {
     struct sockaddr_in client_addr;
@@ -50,7 +60,7 @@ void Server::add_new_client()
     }
 
     std::string ip_address = inet_ntoa(client_addr.sin_addr);
-    std::cout << "Client. connected Socket ID: " << client_fd << " IP: " << ip_address << std::endl;
+    std::cout << "Client connected Socket ID: " << client_fd << " IP: " << ip_address << std::endl;
     
     struct pollfd new_client;
     new_client.fd = client_fd;
@@ -66,22 +76,32 @@ void Server::parse_client_message(size_t &index)
 {
     char buffer[1024];
     int bytes_received = recv(_pollfds[index].fd, buffer, sizeof(buffer) - 1, 0);
+	int fd = _pollfds[index].fd;
 
-    if (bytes_received <= 0)
-    {
+    if (bytes_received <= 0) {
+		// missing client cleanup
+		// need to remove the client from the client map
+		// remove the client from any channel they were in
+		// notify said channel that the client disconnected
         std::cout << "Client disconnected: " << _pollfds[index].fd << std::endl;
         close(_pollfds[index].fd);
         _pollfds.erase(_pollfds.begin() + index);
         index--;
+		return;
     }
-    else
-    {
-        buffer[bytes_received] = '\0';
-        std::string s(buffer);
-        Message msg(s);
-        // msg.parse();
-        std::cout << "Received from client " << _pollfds[index].fd << ": " << buffer;
-    }
+
+	buffer[bytes_received] = '\0';
+	// std::cout << "Received from client " << _pollfds[index].fd << ": " << buffer;
+	client[fd].push_back_buf(buffer);
+	size_t pos = client[fd].get_recv_buf().find("\r\n");
+	while (pos != std::string::npos) {
+		std::string line = client[fd].get_recv_buf().substr(0, pos);
+		// parse the command here
+		// line holds the entire command and its params
+		// after parsing, it needs to be executed immediately
+		client[fd].get_recv_buf().erase(0, pos + 2);
+		pos = client[fd].get_recv_buf().find("\r\n");
+	}
 }
 
 void Server::run()
@@ -97,10 +117,17 @@ void Server::run()
         return;
     }
 
+	int opt = 1;
+	if (setsockopt(srv_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
+		std::cerr << "Error: could not set socket options" << std::endl;
+		close(srv_socket);
+		return;
+	}
+
     memset(&serv, 0, sizeof(serv));
     serv.sin_family = AF_INET;
     serv.sin_port = htons(port);
-    inet_pton(AF_INET, "127.0.0.1", &serv.sin_addr);
+	serv.sin_addr.s_addr = INADDR_ANY;
 
     if(bind(srv_socket, (struct sockaddr*)&serv, sizeof(serv)) < 0) {
         std::cerr << "Error binding socket" << std::endl;

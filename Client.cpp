@@ -59,3 +59,13 @@ void Client::set_is_registered(bool value)
 {
 	this->is_registered = value;
 }
+
+void Client::push_back_buf(char *buf)
+{
+	recv_buffer += buf;
+}
+
+std::string &Client::get_recv_buf()
+{
+	return recv_buffer;
+}
