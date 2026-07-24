@@ -15,16 +15,10 @@ void Message::parse(std::string &ln)
 	cmd.clear();
 	params.clear();
 
-<<<<<<< HEAD
-	if (!ln.empty() && ln[0] == ':') {
-		space_index = ln.find(' ');
-		if (space_index == std::string::npos)
-=======
 	if (!ln.empty() && ln[0] == ':')
 	{
 		size_t sp = ln.find(' ');
 		if (sp == std::string::npos)
->>>>>>> 7eaaa62 (completed commands)
 			return ;
 		ln = ln.substr(sp + 1);
 	}
