@@ -1,6 +1,7 @@
 #include "Client.hpp"
 
 Client::Client()
+<<<<<<< HEAD
 {
     is_registered = false;
 	is_pass = false;
@@ -16,9 +17,27 @@ Client::Client(int fd)
 	is_nick = false;
 	is_user = false;
 }
+=======
+    : fd(-1), is_registered(false), is_pass(false), is_nick(false), is_user(false) {}
+
+Client::Client(int fd)
+    : fd(fd), is_registered(false), is_pass(false), is_nick(false), is_user(false) {}
+>>>>>>> 7eaaa62 (completed commands)
 
 Client::Client(int fd, std::string ip)
+    : fd(fd), ip_address(ip), is_registered(false), is_pass(false), is_nick(false), is_user(false) {}
+
+Client::~Client() {}
+
+Client::Client(const Client &o)
+    : fd(o.fd), ip_address(o.ip_address), nickname(o.nickname),
+      username(o.username), realname(o.realname), recv_buffer(o.recv_buffer),
+      is_registered(o.is_registered), is_pass(o.is_pass),
+      is_nick(o.is_nick), is_user(o.is_user) {}
+
+Client &Client::operator=(const Client &o)
 {
+<<<<<<< HEAD
     this->ip_address = ip;
     this->fd = fd;
     is_registered = false;
@@ -57,101 +76,58 @@ Client& Client::operator=(const Client &obj)
 		this->is_pass = obj.is_pass;
 		this->is_nick = obj.is_nick;
 		this->is_pass = obj.is_pass;
+=======
+    if (this != &o)
+    {
+        fd = o.fd;
+        ip_address = o.ip_address;
+        nickname = o.nickname;
+        username = o.username;
+        realname = o.realname;
+        recv_buffer = o.recv_buffer;
+        is_registered = o.is_registered;
+        is_pass = o.is_pass;
+        is_nick = o.is_nick;
+        is_user = o.is_user;
+>>>>>>> 7eaaa62 (completed commands)
     }
     return *this;
 }
 
-//implemention of the added function
+int Client::get_fd() const { return fd; }
 
-
-bool Client::get_is_registered() const
+std::string Client::getPrefix() const
 {
-	return (this->is_registered);
+    std::string n = nickname.empty() ? "*" : nickname;
+    std::string u = username.empty() ? "*" : username;
+    return n + "!" + u + "@" + ip_address;
 }
 
-void Client::set_is_registered(bool value)
-{
-	this->is_registered = value;
-}
+bool        Client::get_is_registered() const { return is_registered; }
+void        Client::set_is_registered(bool v) { is_registered = v; }
+void        Client::push_back_buf(char *buf)  { recv_buffer += buf; }
+std::string &Client::get_recv_buf()           { return recv_buffer; }
 
-void Client::push_back_buf(char *buf)
-{
-	recv_buffer += buf;
-}
-
-std::string &Client::get_recv_buf()
-{
-	return recv_buffer;
-}
-
-// --- NEW PERMISSION FUNCTIONS ---
-
-bool Client::get_is_pass() const
-{
-	return (this->is_pass);
-}
-
-void Client::set_is_pass(bool value)
-{
-	this->is_pass = value;
-}
-
-bool Client::get_is_nick() const
-{
-	return (this->is_nick);
-}
-
-void Client::set_is_nick(bool value)
-{
-	this->is_nick = value;
-}
-
-bool Client::get_is_user() const
-{
-	return (this->is_user);
-}
-
-void Client::set_is_user(bool value)
-{
-	this->is_user = value;
-}
+bool Client::get_is_pass() const { return is_pass; }
+void Client::set_is_pass(bool v) { is_pass = v; }
+bool Client::get_is_nick() const { return is_nick; }
+void Client::set_is_nick(bool v) { is_nick = v; }
+bool Client::get_is_user() const { return is_user; }
+void Client::set_is_user(bool v) { is_user = v; }
 
 bool Client::try_register()
 {
-	if (!this->is_registered && this->is_pass && this->is_nick && this->is_user)
-	{
-		this->is_registered = true;
-		return (true);
-	}
-	return (false);
+    if (!is_registered && is_pass && is_nick && is_user)
+    {
+        is_registered = true;
+        return true;
+    }
+    return false;
 }
 
-std::string Client::get_nickname() const
-{
-	return (this->nickname);
-}
-
-void Client::set_nickname(const std::string &nick)
-{
-	this->nickname = nick;
-}
-
-std::string Client::get_username() const
-{
-	return (this->username);
-}
-
-void Client::set_username(const std::string &user)
-{
-	this->username = user;
-}
-
-std::string Client::get_realname() const
-{
-	return (this->realname);
-}
-
-void Client::set_realname(const std::string &real)
-{
-	this->realname = real;
-}
+std::string Client::get_nickname() const              { return nickname; }
+void        Client::set_nickname(const std::string &n) { nickname = n; }
+std::string Client::get_username() const              { return username; }
+void        Client::set_username(const std::string &u) { username = u; }
+std::string Client::get_realname() const              { return realname; }
+void        Client::set_realname(const std::string &r) { realname = r; }

@@ -3,18 +3,17 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <map>
 
 class Message
 {
-    private: 
+    private:
         std::string cmd;
-		std::vector<std::string> params;
+        std::vector<std::string> params;
     public:
         Message() {};
         ~Message() {};
 
-		void parse(std::string &ln);
-		std::string getCmd() const;
-		std::vector<std::string> getParams() const;
+        void parse(std::string &ln);
+        std::string getCmd() const;
+        std::vector<std::string> getParams() const;
 };
