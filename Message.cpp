@@ -16,7 +16,7 @@ void Message::parse(std::string &ln)
 	params.clear();
 	size_t space_index;
 
-	if (ln[0] == ':') {
+	if (!ln.empty() && ln[0] == ':') {
 		space_index = ln.find(' ');
 		if (space_index == std::string::npos)
 			return ;

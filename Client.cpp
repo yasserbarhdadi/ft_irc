@@ -3,12 +3,18 @@
 Client::Client()
 {
     is_registered = false;
+	is_pass = false;
+	is_nick = false;
+	is_user = false;
 }
 
 Client::Client(int fd)
 {
     this->fd = fd;
     is_registered = false;
+	is_pass = false;
+	is_nick = false;
+	is_user = false;
 }
 
 Client::Client(int fd, std::string ip)
@@ -16,6 +22,9 @@ Client::Client(int fd, std::string ip)
     this->ip_address = ip;
     this->fd = fd;
     is_registered = false;
+	is_pass = false;
+	is_nick = false;
+	is_user = false;
 }
 
 Client::~Client()
@@ -44,6 +53,10 @@ Client& Client::operator=(const Client &obj)
         this->username = obj.username;
         this->realname = obj.realname;
         this->is_registered = obj.is_registered;
+		this->recv_buffer = obj.recv_buffer;
+		this->is_pass = obj.is_pass;
+		this->is_nick = obj.is_nick;
+		this->is_pass = obj.is_pass;
     }
     return *this;
 }
