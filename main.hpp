@@ -16,6 +16,7 @@
 #include <poll.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include "Client.hpp"
 #include "Message.hpp"

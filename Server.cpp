@@ -295,22 +295,28 @@ void Server::run()
     pfd.revents = 0;
     _pollfds.push_back(pfd);
 
-    while (true)
+    while (g_is_running)
     {
-        if (poll(&_pollfds[0], _pollfds.size(), -1) < 0) {
-            // handle error
+        if (poll(&_pollfds[0], _pollfds.size(), -1) < 0)
+		{
+			if (g_is_running == false)
+            {
+                std::cout << "\nPoll interrupted by signal. Exiting loop" << std::endl;
+                break;
+            }
+            std::cerr << "Error: poll() failed" << std::endl;
+            break;
         }
-        else {
+        else
+		{
             for (size_t i = 0; i < _pollfds.size(); i++)
             {
                 if (_pollfds[i].revents & POLLIN)
                 {
-                    if (_pollfds[i].fd == srv_socket) {
+                    if (_pollfds[i].fd == srv_socket)
                         add_new_client();
-                    }
-                    else {
+                    else
                         parse_client_message(i);
-                    }
                 }
             }
         }

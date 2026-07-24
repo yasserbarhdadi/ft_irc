@@ -25,3 +25,5 @@ class Server {
         void parse_client_message(size_t &index);
 		void dispatch_cmd(int fd, Message &msg);
 };
+
+extern bool g_is_running;
