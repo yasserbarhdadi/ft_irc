@@ -1,9 +1,5 @@
 #include "Server.hpp"
 
-/* ------------------------------------------------------------------------ */
-/* PASS                                                                      */
-/* ------------------------------------------------------------------------ */
-
 void Server::cmd_pass(int fd, Message &msg)
 {
 	if (this->_clients[fd].get_is_registered())
@@ -27,10 +23,6 @@ void Server::cmd_pass(int fd, Message &msg)
 		this->send_reply(fd, ":" + this->_hostname + " 464 * :Password incorrect");
 	}
 }
-
-/* ------------------------------------------------------------------------ */
-/* NICK                                                                      */
-/* ------------------------------------------------------------------------ */
 
 static bool is_valid_nick(const std::string &nick)
 {
@@ -112,10 +104,6 @@ void Server::cmd_nick(int fd, Message &msg)
 	}
 }
 
-/* ------------------------------------------------------------------------ */
-/* USER                                                                      */
-/* ------------------------------------------------------------------------ */
-
 void Server::cmd_user(int fd, Message &msg)
 {
 	if (!this->_clients[fd].get_is_pass())
@@ -143,20 +131,4 @@ void Server::cmd_user(int fd, Message &msg)
 	{
 		this->send_reply(fd, this->rpl("001", fd) + " :Welcome to the Internet Relay Network " + this->_clients[fd].get_nickname());
 	}
-}
-
-/* ------------------------------------------------------------------------ */
-/* PING                                                                      */
-/* ------------------------------------------------------------------------ */
-
-void Server::cmd_ping(int fd, Message &msg)
-{
-	std::string token;
-
-	if (!msg.getParams().empty())
-	{
-		token = msg.getParams()[0];
-	}
-
-	this->send_reply(fd, ":" + this->_hostname + " PONG " + this->_hostname + " :" + token);
 }

@@ -1,9 +1,5 @@
 #include "Server.hpp"
 
-/* ------------------------------------------------------------------------ */
-/* KICK                                                                      */
-/* ------------------------------------------------------------------------ */
-
 void Server::cmd_kick(int fd, Message &msg)
 {
 	if (msg.getParams().size() < 2)
@@ -57,10 +53,6 @@ void Server::cmd_kick(int fd, Message &msg)
 	}
 }
 
-/* ------------------------------------------------------------------------ */
-/* INVITE                                                                    */
-/* ------------------------------------------------------------------------ */
-
 void Server::cmd_invite(int fd, Message &msg)
 {
 	if (msg.getParams().size() < 2)
@@ -111,10 +103,6 @@ void Server::cmd_invite(int fd, Message &msg)
 	this->send_reply(target->get_fd(), ":" + this->_clients[fd].getPrefix() + " INVITE " + target_nick + " " + chan_name);
 }
 
-/* ------------------------------------------------------------------------ */
-/* TOPIC                                                                     */
-/* ------------------------------------------------------------------------ */
-
 void Server::cmd_topic(int fd, Message &msg)
 {
 	if (msg.getParams().empty())
@@ -161,10 +149,6 @@ void Server::cmd_topic(int fd, Message &msg)
 	chan.setTopic(msg.getParams()[1]);
 	chan.broadcast(":" + this->_clients[fd].getPrefix() + " TOPIC " + chan_name + " :" + msg.getParams()[1], NULL);
 }
-
-/* ------------------------------------------------------------------------ */
-/* MODE                                                                      */
-/* ------------------------------------------------------------------------ */
 
 void Server::cmd_mode(int fd, Message &msg)
 {

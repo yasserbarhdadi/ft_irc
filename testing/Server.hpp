@@ -14,12 +14,6 @@ class Server
 		std::vector<struct pollfd>        _pollfds;
 		std::map<int, Client>              _clients;
 		std::map<std::string, Channel>    _channels;
-
-		/* output: nothing is ever written straight to a socket.
-		 * send_reply() and Channel::broadcast() only queue data on
-		 * the target Client; flush_client() is the single place
-		 * that actually calls send(), and it is only called once
-		 * poll() reports the fd as writable. */
 		void    send_reply(int fd, const std::string &reply);
 		void    flush_client(int fd);
 		void    sync_poll_events();
@@ -34,7 +28,6 @@ class Server
 		void    cmd_invite(int fd, Message &msg);
 		void    cmd_topic(int fd, Message &msg);
 		void    cmd_mode(int fd, Message &msg);
-		void    cmd_ping(int fd, Message &msg);
 
 		void        remove_client(int fd, const std::string &reason);
 		Client      *find_client_by_nick(const std::string &nick);

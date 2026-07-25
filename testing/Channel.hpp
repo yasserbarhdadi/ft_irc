@@ -51,7 +51,5 @@ class Channel
 		bool                  isInvited(const std::string &nick) const;
 		void                  removeInvite(const std::string &nick);
 
-		/* Queues the message on every member's own output buffer
-		 * instead of calling send() directly. */
 		void                  broadcast(const std::string &msg, Client *exclude);
 };

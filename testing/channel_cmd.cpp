@@ -1,9 +1,5 @@
 #include "Server.hpp"
 
-/* ------------------------------------------------------------------------ */
-/* JOIN                                                                      */
-/* ------------------------------------------------------------------------ */
-
 void Server::cmd_join(int fd, Message &msg)
 {
 	std::string nick = this->_clients[fd].get_nickname();
@@ -82,10 +78,6 @@ void Server::cmd_join(int fd, Message &msg)
 	this->send_reply(fd, this->rpl("366", fd) + " " + chan_name + " :End of /NAMES list");
 }
 
-/* ------------------------------------------------------------------------ */
-/* PART                                                                      */
-/* ------------------------------------------------------------------------ */
-
 void Server::cmd_part(int fd, Message &msg)
 {
 	if (msg.getParams().empty())
@@ -124,10 +116,6 @@ void Server::cmd_part(int fd, Message &msg)
 		this->_channels.erase(chan_name);
 	}
 }
-
-/* ------------------------------------------------------------------------ */
-/* PRIVMSG                                                                   */
-/* ------------------------------------------------------------------------ */
 
 void Server::cmd_privmsg(int fd, Message &msg)
 {

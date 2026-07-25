@@ -39,10 +39,6 @@ Server &Server::operator=(const Server &o)
 	return (*this);
 }
 
-/* ------------------------------------------------------------------------ */
-/* Output helpers                                                           */
-/* ------------------------------------------------------------------------ */
-
 void Server::send_reply(int fd, const std::string &reply)
 {
 	std::map<int, Client>::iterator it = this->_clients.find(fd);
@@ -147,11 +143,6 @@ std::string Server::build_names_list(Channel &chan)
 	return (names);
 }
 
-/* Called whenever a client's fd is being torn down (network disconnect,
- * error, ...). This is NOT the QUIT command (that one isn't implemented,
- * it's not part of the mandatory subject); it only cleans up channel
- * membership and notifies the other members, the way any IRC server
- * notifies a channel when a client's connection drops. */
 void Server::remove_client(int fd, const std::string &reason)
 {
 	std::string prefix = ":" + this->_clients[fd].getPrefix();
@@ -175,10 +166,6 @@ void Server::remove_client(int fd, const std::string &reason)
 	}
 }
 
-/* ------------------------------------------------------------------------ */
-/* Command dispatch                                                          */
-/* ------------------------------------------------------------------------ */
-
 void Server::dispatch_cmd(int fd, Message &msg)
 {
 	std::string cmd = msg.getCmd();
@@ -199,10 +186,6 @@ void Server::dispatch_cmd(int fd, Message &msg)
 	else if (cmd == "USER")
 	{
 		this->cmd_user(fd, msg);
-	}
-	else if (cmd == "PING")
-	{
-		this->cmd_ping(fd, msg);
 	}
 	else if (!this->_clients[fd].get_is_registered())
 	{
@@ -241,10 +224,6 @@ void Server::dispatch_cmd(int fd, Message &msg)
 		this->send_reply(fd, this->rpl("421", fd) + " " + cmd + " :Unknown command");
 	}
 }
-
-/* ------------------------------------------------------------------------ */
-/* Network I/O                                                              */
-/* ------------------------------------------------------------------------ */
 
 void Server::add_new_client()
 {

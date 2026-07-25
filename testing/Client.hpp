@@ -45,10 +45,6 @@ class Client
 		void         set_username(const std::string &user);
 		std::string  get_realname() const;
 		void         set_realname(const std::string &real);
-
-		/* Non-blocking output: nothing is ever send() directly.
-		 * Messages are appended here and only written to the socket
-		 * once poll() reports the fd as writable (POLLOUT). */
 		void               queue_msg(const std::string &data);
 		bool               has_pending_output() const;
 		const std::string  &get_send_buf() const;
