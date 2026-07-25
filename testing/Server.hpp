@@ -30,7 +30,6 @@ class Server
 		void    cmd_join(int fd, Message &msg);
 		void    cmd_part(int fd, Message &msg);
 		void    cmd_privmsg(int fd, Message &msg);
-		void    cmd_quit(int fd, Message &msg, size_t &index);
 		void    cmd_kick(int fd, Message &msg);
 		void    cmd_invite(int fd, Message &msg);
 		void    cmd_topic(int fd, Message &msg);
@@ -52,7 +51,7 @@ class Server
 		void run();
 		void add_new_client();
 		void parse_client_message(size_t &index);
-		void dispatch_cmd(int fd, Message &msg, size_t &index);
+		void dispatch_cmd(int fd, Message &msg);
 };
 
 extern volatile sig_atomic_t g_is_running;
